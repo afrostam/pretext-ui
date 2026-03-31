@@ -1,0 +1,15 @@
+{
+  "name": "pretext-ui",
+  "private": true,
+  "description": "React component library powered by @chenglou/pretext",
+  "scripts": {
+    "dev": "pnpm --filter @pretext-ui/docs dev",
+    "build": "pnpm --filter @pretext-ui/react build && pnpm --filter @pretext-ui/docs build",
+    "build:lib": "pnpm --filter @pretext-ui/react build",
+    "test": "pnpm --filter @pretext-ui/react test",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
