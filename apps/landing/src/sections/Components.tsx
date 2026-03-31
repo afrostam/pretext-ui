@@ -181,7 +181,7 @@ function MasonryGridDemo() {
   const COLORS = ["border-indigo-800/30 bg-indigo-950/20", "border-emerald-800/30 bg-emerald-950/20", "border-amber-800/30 bg-amber-950/20"];
 
   const renderCard = useCallback((layout: MasonryCardLayout) => (
-    <div className={`h-full rounded-md border p-2 ${COLORS[layout.column % COLORS.length]}`}>
+    <div className={`h-full rounded-md border p-2 overflow-hidden ${COLORS[layout.column % COLORS.length]}`}>
       <div className="text-gray-300 text-xs" style={{ font: FONT, lineHeight: `${LINE_HEIGHT}px`, whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
         {layout.item.text}
       </div>
@@ -191,7 +191,7 @@ function MasonryGridDemo() {
   return (
     <div>
       <div className="text-[10px] text-gray-600 mb-2">9 cards, 3 columns — all heights pre-computed</div>
-      <MasonryGrid items={items} font={FONT} lineHeight={LINE_HEIGHT} columns={3} gap={8} cardPadding={22} cardHorizontalPadding={18} renderCard={renderCard} />
+      <MasonryGrid items={items} font={FONT} lineHeight={LINE_HEIGHT} columns={3} gap={8} cardPadding={18} cardHorizontalPadding={18} renderCard={renderCard} />
     </div>
   );
 }
