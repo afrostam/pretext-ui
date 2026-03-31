@@ -89,7 +89,7 @@ export function useMasonryLayout(options: {
       const textH = item.text
         ? measureHeight(item.text, itemFont, textWidth, lineHeight)
         : lineHeight;
-      const cardHeight = Math.ceil(textH) + cardPadding;
+      const cardHeight = textH + cardPadding;
 
       const x = shortestCol * (cardWidth + gap);
       const y = columnHeights[shortestCol];
