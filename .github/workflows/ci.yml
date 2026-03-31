@@ -25,14 +25,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build library (needed for app typechecks)
+        run: pnpm build:lib
+
       - name: Typecheck
         run: pnpm typecheck
 
       - name: Test
         run: pnpm test
 
-      - name: Build library
-        run: pnpm build:lib
-
-      - name: Build demo site
-        run: pnpm --filter @pretext-ui/docs build
+      - name: Build apps
+        run: |
+          pnpm --filter @pretext-ui/docs build
+          pnpm --filter @pretext-ui/landing build
+          pnpm --filter @pretext-ui/ai-chat build
