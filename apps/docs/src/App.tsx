@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useRef, useCallback } from "react";
 import { VirtualList, type VirtualRow } from "@pretext-ui/react";
 import { PerfCounter } from "./PerfCounter.js";
+import { ChatBubblesDemo } from "./ChatBubblesDemo.js";
 import { generateItems } from "./data.js";
 
 const FONT = "16px Inter, system-ui, -apple-system, sans-serif";
@@ -8,11 +9,13 @@ const LINE_HEIGHT = 24;
 
 const ITEM_COUNTS = [1_000, 5_000, 10_000, 50_000];
 
+type Tab = "virtual-list" | "chat-bubbles";
+
 export function App() {
+  const [tab, setTab] = useState<Tab>("virtual-list");
   const [itemCount, setItemCount] = useState(10_000);
   const items = useMemo(() => generateItems(itemCount), [itemCount]);
 
-  // Track the list container width for the perf counter
   const [listWidth, setListWidth] = useState(0);
   const widthObserverRef = useRef<ResizeObserver | null>(null);
 
@@ -34,11 +37,9 @@ export function App() {
 
   const renderRow = useCallback((row: VirtualRow) => (
     <div className="flex gap-3 px-4 py-2 border-b border-gray-800/50">
-      {/* Avatar */}
       <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-600/30 flex items-center justify-center text-xs font-medium text-indigo-300 mt-0.5">
         {(row.index % 5) + 1}
       </div>
-      {/* Message */}
       <div className="min-w-0 flex-1">
         <div className="text-xs text-gray-500 mb-0.5">
           User {(row.index % 5) + 1}
@@ -54,9 +55,13 @@ export function App() {
     </div>
   ), []);
 
+  const tabs: { id: Tab; label: string }[] = [
+    { id: "virtual-list", label: "VirtualList" },
+    { id: "chat-bubbles", label: "ChatBubbles" },
+  ];
+
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
       <header className="border-b border-gray-800 px-6 py-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div>
@@ -80,55 +85,87 @@ export function App() {
         </div>
       </header>
 
-      <main className="flex-1 max-w-4xl mx-auto w-full px-6 py-8 flex flex-col gap-8">
-        {/* Controls */}
-        <div className="flex items-center gap-3 flex-wrap">
-          <span className="text-sm text-gray-400">Items:</span>
-          {ITEM_COUNTS.map((count) => (
+      {/* Tab bar */}
+      <div className="border-b border-gray-800 px-6">
+        <div className="max-w-4xl mx-auto flex gap-1">
+          {tabs.map((t) => (
             <button
-              key={count}
-              onClick={() => setItemCount(count)}
-              className={`px-3 py-1 rounded-md text-sm font-mono transition-colors ${
-                count === itemCount
-                  ? "bg-indigo-600 text-white"
-                  : "bg-gray-800 text-gray-400 hover:bg-gray-700"
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                tab === t.id
+                  ? "border-indigo-500 text-indigo-400"
+                  : "border-transparent text-gray-500 hover:text-gray-300"
               }`}
             >
-              {count.toLocaleString()}
+              {t.label}
             </button>
           ))}
         </div>
+      </div>
 
-        {/* Performance counter */}
-        <PerfCounter
-          items={items}
-          font={FONT}
-          lineHeight={LINE_HEIGHT}
-          containerWidth={listWidth}
-        />
+      <main className="flex-1 max-w-4xl mx-auto w-full px-6 py-8 flex flex-col gap-8">
+        {tab === "virtual-list" && (
+          <>
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="text-sm text-gray-400">Items:</span>
+              {ITEM_COUNTS.map((count) => (
+                <button
+                  key={count}
+                  onClick={() => setItemCount(count)}
+                  className={`px-3 py-1 rounded-md text-sm font-mono transition-colors ${
+                    count === itemCount
+                      ? "bg-indigo-600 text-white"
+                      : "bg-gray-800 text-gray-400 hover:bg-gray-700"
+                  }`}
+                >
+                  {count.toLocaleString()}
+                </button>
+              ))}
+            </div>
 
-        {/* VirtualList demo */}
-        <div className="flex-1 flex flex-col min-h-0">
-          <h2 className="text-lg font-semibold mb-3">
-            VirtualList
-            <span className="text-sm font-normal text-gray-500 ml-2">
-              {itemCount.toLocaleString()} items, variable heights, zero DOM measurement
-            </span>
-          </h2>
-
-          <div ref={listContainerRef} className="flex-1 min-h-0 rounded-xl border border-gray-800 overflow-hidden">
-            <VirtualList
+            <PerfCounter
               items={items}
               font={FONT}
               lineHeight={LINE_HEIGHT}
-              rowPadding={16}
-              overscan={5}
-              renderRow={renderRow}
-              className="h-[600px]"
-              style={{ background: "rgb(3 7 18)" }}
+              containerWidth={listWidth}
             />
+
+            <div className="flex-1 flex flex-col min-h-0">
+              <h2 className="text-lg font-semibold mb-3">
+                VirtualList
+                <span className="text-sm font-normal text-gray-500 ml-2">
+                  {itemCount.toLocaleString()} items, variable heights, zero DOM measurement
+                </span>
+              </h2>
+
+              <div ref={listContainerRef} className="flex-1 min-h-0 rounded-xl border border-gray-800 overflow-hidden">
+                <VirtualList
+                  items={items}
+                  font={FONT}
+                  lineHeight={LINE_HEIGHT}
+                  rowPadding={16}
+                  overscan={5}
+                  renderRow={renderRow}
+                  className="h-[600px]"
+                  style={{ background: "rgb(3 7 18)" }}
+                />
+              </div>
+            </div>
+          </>
+        )}
+
+        {tab === "chat-bubbles" && (
+          <div>
+            <h2 className="text-lg font-semibold mb-3">
+              ChatBubbles
+              <span className="text-sm font-normal text-gray-500 ml-2">
+                shrink-wrapped to widest line, zero DOM measurement
+              </span>
+            </h2>
+            <ChatBubblesDemo />
           </div>
-        </div>
+        )}
       </main>
     </div>
   );
