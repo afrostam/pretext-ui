@@ -191,7 +191,7 @@ function MasonryGridDemo() {
   return (
     <div>
       <div className="text-[10px] text-gray-600 mb-2">9 cards, 3 columns — all heights pre-computed</div>
-      <MasonryGrid items={items} font={FONT} lineHeight={LINE_HEIGHT} columns={3} gap={8} cardPadding={18} cardHorizontalPadding={18} renderCard={renderCard} />
+      <MasonryGrid items={items} font={FONT} lineHeight={LINE_HEIGHT} columns={3} gap={8} cardPadding={20} cardHorizontalPadding={16} renderCard={renderCard} />
     </div>
   );
 }
