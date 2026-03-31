@@ -85,17 +85,15 @@ export function useVirtualList(options: UseVirtualListOptions): UseVirtualListRe
     if (containerWidth <= 0) {
       return { rowHeights: [] as number[], prefixHeights: [] as number[], totalHeight: 0 };
     }
-    // Account for padding + borders inside the row when measuring text width.
-    // Extra 4px buffer for cross-browser sub-pixel rounding differences.
-    const textWidth = Math.max(containerWidth - 36, 0);
+    // Account for padding inside the row when measuring text width
+    const textWidth = Math.max(containerWidth - 32, 0); // 16px padding each side
     const heights: number[] = new Array(items.length);
     const prefixes: number[] = new Array(items.length);
     let cumulative = 0;
 
     for (let i = 0; i < items.length; i++) {
       const textHeight = measureHeight(items[i].text, font, textWidth, lineHeight);
-      // ceil + 2px buffer for cross-browser font rendering variance
-      const rowH = Math.ceil(textHeight) + rowPadding + 2;
+      const rowH = Math.ceil(textHeight) + rowPadding;
       heights[i] = rowH;
       prefixes[i] = cumulative;
       cumulative += rowH;
