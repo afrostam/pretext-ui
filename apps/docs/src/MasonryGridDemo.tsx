@@ -116,8 +116,8 @@ export function MasonryGridDemo() {
         lineHeight={LINE_HEIGHT}
         columns={columns}
         gap={12}
-        cardPadding={24}
-        cardHorizontalPadding={24}
+        cardPadding={40}
+        cardHorizontalPadding={26}
         renderCard={renderCard}
       />
 

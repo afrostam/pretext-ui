@@ -70,9 +70,7 @@ export function useMasonryLayout(options: {
     }
 
     const cardWidth = (containerWidth - gap * (columns - 1)) / columns;
-    // Subtract extra 4px to account for borders and sub-pixel rounding
-    // across browsers — prevents text from wrapping one line more than expected
-    const textWidth = Math.max(cardWidth - cardHorizontalPadding - 4, 0);
+    const textWidth = Math.max(cardWidth - cardHorizontalPadding, 0);
 
     // Track the bottom edge of each column
     const columnHeights = new Array<number>(columns).fill(0);
@@ -91,8 +89,7 @@ export function useMasonryLayout(options: {
       const textH = item.text
         ? measureHeight(item.text, itemFont, textWidth, lineHeight)
         : lineHeight;
-      // ceil + 2px buffer to account for cross-browser font rendering differences
-      const cardHeight = Math.ceil(textH) + cardPadding + 2;
+      const cardHeight = Math.ceil(textH) + cardPadding;
 
       const x = shortestCol * (cardWidth + gap);
       const y = columnHeights[shortestCol];
