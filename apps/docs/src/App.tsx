@@ -2,6 +2,8 @@ import React, { useState, useMemo, useRef, useCallback } from "react";
 import { VirtualList, type VirtualRow } from "@pretext-ui/react";
 import { PerfCounter } from "./PerfCounter.js";
 import { ChatBubblesDemo } from "./ChatBubblesDemo.js";
+import { AutoResizeInputDemo } from "./AutoResizeInputDemo.js";
+import { MasonryGridDemo } from "./MasonryGridDemo.js";
 import { generateItems } from "./data.js";
 
 const FONT = "16px Inter, system-ui, -apple-system, sans-serif";
@@ -9,7 +11,7 @@ const LINE_HEIGHT = 24;
 
 const ITEM_COUNTS = [1_000, 5_000, 10_000, 50_000];
 
-type Tab = "virtual-list" | "chat-bubbles";
+type Tab = "virtual-list" | "chat-bubbles" | "auto-resize" | "masonry";
 
 export function App() {
   const [tab, setTab] = useState<Tab>("virtual-list");
@@ -58,6 +60,8 @@ export function App() {
   const tabs: { id: Tab; label: string }[] = [
     { id: "virtual-list", label: "VirtualList" },
     { id: "chat-bubbles", label: "ChatBubbles" },
+    { id: "auto-resize", label: "AutoResizeInput" },
+    { id: "masonry", label: "MasonryGrid" },
   ];
 
   return (
@@ -164,6 +168,30 @@ export function App() {
               </span>
             </h2>
             <ChatBubblesDemo />
+          </div>
+        )}
+
+        {tab === "auto-resize" && (
+          <div>
+            <h2 className="text-lg font-semibold mb-3">
+              AutoResizeInput
+              <span className="text-sm font-normal text-gray-500 ml-2">
+                growing textarea, zero scrollHeight reads
+              </span>
+            </h2>
+            <AutoResizeInputDemo />
+          </div>
+        )}
+
+        {tab === "masonry" && (
+          <div>
+            <h2 className="text-lg font-semibold mb-3">
+              MasonryGrid
+              <span className="text-sm font-normal text-gray-500 ml-2">
+                Pinterest-style layout, zero DOM measurement
+              </span>
+            </h2>
+            <MasonryGridDemo />
           </div>
         )}
       </main>

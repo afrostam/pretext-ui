@@ -13,6 +13,14 @@ export {
   type ChatMessage,
   type BubbleLayout,
 } from "./use-chat-bubbles.js";
+export { AutoResizeInput, type AutoResizeInputProps } from "./AutoResizeInput.js";
+export {
+  MasonryGrid,
+  useMasonryLayout,
+  type MasonryGridProps,
+  type MasonryItem,
+  type MasonryCardLayout,
+} from "./MasonryGrid.js";
 export {
   measureText,
   measureHeight,
