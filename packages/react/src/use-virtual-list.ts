@@ -93,7 +93,8 @@ export function useVirtualList(options: UseVirtualListOptions): UseVirtualListRe
 
     for (let i = 0; i < items.length; i++) {
       const textHeight = measureHeight(items[i].text, font, textWidth, lineHeight);
-      const rowH = textHeight + rowPadding;
+      // ceil + 2px buffer for cross-browser font rendering variance
+      const rowH = Math.ceil(textHeight) + rowPadding + 2;
       heights[i] = rowH;
       prefixes[i] = cumulative;
       cumulative += rowH;
