@@ -85,8 +85,9 @@ export function useVirtualList(options: UseVirtualListOptions): UseVirtualListRe
     if (containerWidth <= 0) {
       return { rowHeights: [] as number[], prefixHeights: [] as number[], totalHeight: 0 };
     }
-    // Account for padding inside the row when measuring text width
-    const textWidth = Math.max(containerWidth - 32, 0); // 16px padding each side
+    // Account for padding + borders inside the row when measuring text width.
+    // Extra 4px buffer for cross-browser sub-pixel rounding differences.
+    const textWidth = Math.max(containerWidth - 36, 0);
     const heights: number[] = new Array(items.length);
     const prefixes: number[] = new Array(items.length);
     let cumulative = 0;
