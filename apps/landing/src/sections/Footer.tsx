@@ -5,8 +5,8 @@ export function Footer() {
     <footer className="border-t border-gray-800/50 py-12">
       <div className="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="text-sm text-gray-600">
-          Built by{" "}
-          <span className="text-gray-400">Stamatios Kritikos</span>
+          Built with{" "}
+          <span className="text-gray-400">Claude</span>
         </div>
         <div className="flex items-center gap-6 text-sm text-gray-600">
           <a
