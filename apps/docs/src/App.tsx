@@ -4,6 +4,7 @@ import { PerfCounter } from "./PerfCounter.js";
 import { ChatBubblesDemo } from "./ChatBubblesDemo.js";
 import { AutoResizeInputDemo } from "./AutoResizeInputDemo.js";
 import { MasonryGridDemo } from "./MasonryGridDemo.js";
+import { StreamingTextDemo } from "./StreamingTextDemo.js";
 import { generateItems } from "./data.js";
 
 const FONT = "16px Inter, system-ui, -apple-system, sans-serif";
@@ -11,7 +12,7 @@ const LINE_HEIGHT = 24;
 
 const ITEM_COUNTS = [1_000, 5_000, 10_000, 50_000];
 
-type Tab = "virtual-list" | "chat-bubbles" | "auto-resize" | "masonry";
+type Tab = "virtual-list" | "chat-bubbles" | "auto-resize" | "masonry" | "streaming";
 
 export function App() {
   const [tab, setTab] = useState<Tab>("virtual-list");
@@ -62,6 +63,7 @@ export function App() {
     { id: "chat-bubbles", label: "ChatBubbles" },
     { id: "auto-resize", label: "AutoResizeInput" },
     { id: "masonry", label: "MasonryGrid" },
+    { id: "streaming", label: "StreamingText" },
   ];
 
   return (
@@ -192,6 +194,18 @@ export function App() {
               </span>
             </h2>
             <MasonryGridDemo />
+          </div>
+        )}
+
+        {tab === "streaming" && (
+          <div>
+            <h2 className="text-lg font-semibold mb-3">
+              StreamingText
+              <span className="text-sm font-normal text-gray-500 ml-2">
+                AI streaming with zero layout shift
+              </span>
+            </h2>
+            <StreamingTextDemo />
           </div>
         )}
       </main>

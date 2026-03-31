@@ -21,6 +21,7 @@ export {
   type MasonryItem,
   type MasonryCardLayout,
 } from "./MasonryGrid.js";
+export { StreamingText, type StreamingTextProps } from "./StreamingText.js";
 export {
   measureText,
   measureHeight,
