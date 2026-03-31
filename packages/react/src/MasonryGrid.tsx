@@ -175,7 +175,7 @@ export function MasonryGrid({
               left: card.x,
               top: card.y,
               width: card.width,
-              height: card.height,
+              minHeight: card.height,
             }}
           >
             {renderCard(card)}

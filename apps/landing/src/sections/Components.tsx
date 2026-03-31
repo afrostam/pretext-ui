@@ -181,7 +181,7 @@ function MasonryGridDemo() {
   const COLORS = ["border-indigo-800/30 bg-indigo-950/20", "border-emerald-800/30 bg-emerald-950/20", "border-amber-800/30 bg-amber-950/20"];
 
   const renderCard = useCallback((layout: MasonryCardLayout) => (
-    <div className={`h-full rounded-md border p-2 overflow-hidden ${COLORS[layout.column % COLORS.length]}`}>
+    <div className={`h-full rounded-md border p-2 ${COLORS[layout.column % COLORS.length]}`}>
       <div className="text-gray-300 text-xs" style={{ font: FONT, lineHeight: `${LINE_HEIGHT}px`, whiteSpace: "pre-wrap", wordWrap: "break-word" }}>
         {layout.item.text}
       </div>
