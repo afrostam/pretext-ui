@@ -65,6 +65,8 @@ import { VirtualList } from "@pretext-ui/react";
 | `lineHeight` | `number` | required | Line height in px |
 | `rowPadding` | `number` | `16` | Vertical padding per row (top + bottom) |
 | `overscan` | `number` | `5` | Extra rows rendered beyond viewport |
+| `getTextWidth` | `(containerWidth) => number` | `w => w - 32` | Width available to row text — subtract padding, avatars, gaps, max-width caps |
+| `textOptions` | `TextOptions` | — | See [Text Options](#text-options) |
 | `renderRow` | `(row: VirtualRow) => ReactNode` | required | Row render function |
 | `className` | `string` | — | Container className |
 | `style` | `CSSProperties` | — | Container style |

@@ -21,6 +21,12 @@ export interface UseVirtualListOptions {
   overscan?: number;
   /** pretext text options (whiteSpace, wordBreak, letterSpacing). */
   textOptions?: TextOptions;
+  /**
+   * Width available to the text inside a row, given the container width.
+   * Subtract everything your row layout takes up beside the text: padding,
+   * avatars, gaps, max-width caps. Default: `(w) => w - 32`.
+   */
+  getTextWidth?: (containerWidth: number) => number;
 }
 
 export interface VirtualRow {
@@ -48,7 +54,7 @@ export interface UseVirtualListResult {
  * Uses pretext to compute exact row heights with pure arithmetic — no DOM measurement needed.
  */
 export function useVirtualList(options: UseVirtualListOptions): UseVirtualListResult {
-  const { items, font, lineHeight, rowPadding = 16, overscan = 5, textOptions } = options;
+  const { items, font, lineHeight, rowPadding = 16, overscan = 5, textOptions, getTextWidth } = options;
   const { whiteSpace, wordBreak, letterSpacing } = textOptions ?? {};
 
   const [scrollTop, setScrollTop] = useState(0);
@@ -83,13 +89,15 @@ export function useVirtualList(options: UseVirtualListOptions): UseVirtualListRe
     if (el) setScrollTop(el.scrollTop);
   }, []);
 
+  // Resolved to a number outside the memo so an inline getTextWidth
+  // doesn't force a full re-measure on every render.
+  const textWidth = Math.max(getTextWidth ? getTextWidth(containerWidth) : containerWidth - 32, 0);
+
   // Compute row heights + prefix sums using pretext
   const { rowHeights, prefixHeights, totalHeight } = useMemo(() => {
     if (containerWidth <= 0) {
       return { rowHeights: [] as number[], prefixHeights: [] as number[], totalHeight: 0 };
     }
-    // Account for padding inside the row when measuring text width
-    const textWidth = Math.max(containerWidth - 32, 0); // 16px padding each side
     const opts: TextOptions = { whiteSpace, wordBreak, letterSpacing };
     const heights: number[] = new Array(items.length);
     const prefixes: number[] = new Array(items.length);
@@ -104,7 +112,7 @@ export function useVirtualList(options: UseVirtualListOptions): UseVirtualListRe
     }
 
     return { rowHeights: heights, prefixHeights: prefixes, totalHeight: cumulative };
-  }, [items, font, lineHeight, rowPadding, containerWidth, whiteSpace, wordBreak, letterSpacing]);
+  }, [items, font, lineHeight, rowPadding, containerWidth, textWidth, whiteSpace, wordBreak, letterSpacing]);
 
   // Binary search for first visible row
   const visibleRows = useMemo((): VirtualRow[] => {

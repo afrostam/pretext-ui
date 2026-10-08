@@ -150,7 +150,8 @@ export function App() {
                   items={items}
                   font={FONT}
                   lineHeight={LINE_HEIGHT}
-                  rowPadding={16}
+                  rowPadding={35}
+                  getTextWidth={(w) => w - 32 - 32 - 12}
                   overscan={5}
                   renderRow={renderRow}
                   className="h-[600px]"

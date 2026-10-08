@@ -79,7 +79,8 @@ export function MessageList({ messages }: MessageListProps) {
         items={items}
         font={FONT}
         lineHeight={LINE_HEIGHT}
-        rowPadding={48}
+        rowPadding={44}
+        getTextWidth={(w) => Math.min(w - 48, 768) - 28 - 16}
         overscan={3}
         renderRow={renderRow}
         className="h-full"

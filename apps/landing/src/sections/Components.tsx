@@ -127,7 +127,8 @@ function VirtualListDemo() {
           items={items}
           font={FONT}
           lineHeight={LINE_HEIGHT}
-          rowPadding={20}
+          rowPadding={30}
+          getTextWidth={(w) => w - 24 - 24 - 8}
           overscan={3}
           renderRow={renderRow}
           className="h-[280px]"

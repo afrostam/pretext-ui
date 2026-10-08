@@ -15,6 +15,8 @@ export interface VirtualListProps {
   overscan?: number;
   /** pretext text options (whiteSpace, wordBreak, letterSpacing). */
   textOptions?: TextOptions;
+  /** Width available to row text, given the container width. Default: `(w) => w - 32`. */
+  getTextWidth?: (containerWidth: number) => number;
   /** Render function for each row. */
   renderRow: (row: VirtualRow) => React.ReactNode;
   /** Optional className for the scroll container. */
@@ -36,6 +38,7 @@ export function VirtualList({
   rowPadding,
   overscan,
   textOptions,
+  getTextWidth,
   renderRow,
   className,
   style,
@@ -47,6 +50,7 @@ export function VirtualList({
     rowPadding,
     overscan,
     textOptions,
+    getTextWidth,
   });
 
   return (
