@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import { ClientOnly } from "../ClientOnly.js";
 import {
   VirtualList,
   ChatBubbles,
@@ -330,7 +331,9 @@ export function Components() {
                   {/* Live demo */}
                   <div>
                     <div className="text-[10px] uppercase tracking-wider text-gray-600 mb-2">Live Demo</div>
-                    <comp.Demo />
+                    <ClientOnly fallback={<div className="min-h-[280px] rounded-lg border border-white/5" />}>
+                      <comp.Demo />
+                    </ClientOnly>
                   </div>
 
                   {/* Code */}

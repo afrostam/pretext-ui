@@ -47,7 +47,8 @@ export function Hero() {
 
         {/* Animated tagline */}
         <p className="text-2xl sm:text-3xl font-medium text-gray-400 mb-4 h-10">
-          {displayed}
+          <span className="sr-only">{TAGLINE}</span>
+          <span aria-hidden="true">{displayed}</span>
           {!done && (
             <span className="inline-block w-[3px] h-[1em] bg-accent-light ml-0.5 align-text-bottom cursor-blink" />
           )}

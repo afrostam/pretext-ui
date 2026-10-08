@@ -2,6 +2,8 @@
 
 React component library powered by [`@chenglou/pretext`](https://github.com/chenglou/pretext) — a text layout engine that computes multiline text height with pure arithmetic. No DOM reflow.
 
+**[Live demos →](https://afrostam.github.io/pretext-ui/)**
+
 ## Why?
 
 Every React app that renders dynamic text eventually hits the same problem: you need to know how tall text will be _before_ rendering it. Traditional solutions either guess (and get it wrong), render offscreen to measure (expensive), or just accept layout shift.
