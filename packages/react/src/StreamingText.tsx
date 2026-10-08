@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useMemo, type CSSProperties } from "react";
-import { measureHeight } from "./pretext-helpers.js";
+import { measureHeight, textStyle, type TextOptions } from "./pretext-helpers.js";
 
 export interface StreamingTextProps {
   /** The text content so far (grows as tokens stream in). */
@@ -18,6 +18,8 @@ export interface StreamingTextProps {
   textClassName?: string;
   /** Callback when the computed height changes. */
   onHeightChange?: (height: number) => void;
+  /** pretext text options (whiteSpace, wordBreak, letterSpacing). */
+  textOptions?: TextOptions;
 }
 
 /**
@@ -36,6 +38,7 @@ export function StreamingText({
   style,
   textClassName,
   onHeightChange,
+  textOptions,
 }: StreamingTextProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
@@ -53,11 +56,12 @@ export function StreamingText({
     return () => ro.disconnect();
   }, []);
 
+  const { whiteSpace, wordBreak, letterSpacing } = textOptions ?? {};
   const computedHeight = useMemo(() => {
     if (width <= 0) return lineHeight;
     if (!text) return lineHeight;
-    return measureHeight(text, font, width, lineHeight);
-  }, [text, font, lineHeight, width]);
+    return measureHeight(text, font, width, lineHeight, { whiteSpace, wordBreak, letterSpacing });
+  }, [text, font, lineHeight, width, whiteSpace, wordBreak, letterSpacing]);
 
   const prevHeightRef = useRef(computedHeight);
   useEffect(() => {
@@ -80,12 +84,7 @@ export function StreamingText({
     >
       <div
         className={textClassName}
-        style={{
-          font,
-          lineHeight: `${lineHeight}px`,
-          whiteSpace: "pre-wrap",
-          wordWrap: "break-word",
-        }}
+        style={textStyle(font, lineHeight, textOptions)}
       >
         {text}
         {isStreaming && (

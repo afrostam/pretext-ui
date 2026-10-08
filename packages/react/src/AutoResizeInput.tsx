@@ -6,7 +6,7 @@ import React, {
   type CSSProperties,
   type TextareaHTMLAttributes,
 } from "react";
-import { measureHeight } from "./pretext-helpers.js";
+import { measureHeight, textStyle, type TextOptions } from "./pretext-helpers.js";
 
 export interface AutoResizeInputProps
   extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "style"> {
@@ -24,6 +24,8 @@ export interface AutoResizeInputProps
   style?: CSSProperties;
   /** Callback when the computed height changes. */
   onHeightChange?: (height: number) => void;
+  /** pretext text options (wordBreak, letterSpacing). Textareas always preserve whitespace. */
+  textOptions?: Omit<TextOptions, "whiteSpace">;
 }
 
 /**
@@ -40,6 +42,7 @@ export function AutoResizeInput({
   verticalPadding = 16,
   style,
   onHeightChange,
+  textOptions,
   onChange,
   value: controlledValue,
   defaultValue,
@@ -53,11 +56,11 @@ export function AutoResizeInput({
 
   const currentValue = controlledValue !== undefined ? (controlledValue as string) : internalValue;
 
-  // Track textarea width via ResizeObserver
+  // Track the textarea's content-box width (excludes padding) via ResizeObserver,
+  // which also fires once on observe with the initial size.
   useEffect(() => {
     const el = textareaRef.current;
     if (!el) return;
-    setWidth(el.clientWidth);
     const ro = new ResizeObserver((entries) => {
       for (const entry of entries) {
         setWidth(entry.contentRect.width);
@@ -73,11 +76,11 @@ export function AutoResizeInput({
 
   let computedHeight = minHeight;
   if (width > 0) {
-    // Subtract horizontal padding (border-box) — approximate with 16px
-    const textWidth = Math.max(width - 16, 0);
-    const textContent = currentValue || "";
+    // A textarea shows an empty caret line after a trailing newline; a div
+    // (which pretext models) doesn't. A trailing space makes them agree.
+    const textContent = currentValue.endsWith("\n") ? `${currentValue} ` : currentValue;
     const measured = textContent
-      ? measureHeight(textContent, font, textWidth, lineHeight)
+      ? measureHeight(textContent, font, width, lineHeight, { ...textOptions, whiteSpace: "pre-wrap" })
       : 0;
     computedHeight = Math.min(
       Math.max(measured + verticalPadding, minHeight),
@@ -110,8 +113,7 @@ export function AutoResizeInput({
       onChange={handleChange}
       {...textareaProps}
       style={{
-        font,
-        lineHeight: `${lineHeight}px`,
+        ...textStyle(font, lineHeight, textOptions),
         resize: "none",
         overflow: computedHeight >= maxHeight ? "auto" : "hidden",
         height: computedHeight,

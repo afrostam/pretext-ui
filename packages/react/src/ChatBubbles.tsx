@@ -1,5 +1,6 @@
 import React, { type CSSProperties } from "react";
 import { useChatBubbles, type ChatMessage, type BubbleLayout } from "./use-chat-bubbles.js";
+import { textStyle, type TextOptions } from "./pretext-helpers.js";
 
 export interface ChatBubblesProps {
   messages: ChatMessage[];
@@ -17,6 +18,8 @@ export interface ChatBubblesProps {
   verticalPadding?: number;
   /** Gap between messages in px. Default: 4. */
   gap?: number;
+  /** pretext text options (whiteSpace, wordBreak, letterSpacing). */
+  textOptions?: TextOptions;
   /** Custom render function. Falls back to default bubble rendering. */
   renderBubble?: (layout: BubbleLayout) => React.ReactNode;
   /** Optional className for the outer container. */
@@ -40,6 +43,7 @@ export function ChatBubbles({
   horizontalPadding = 24,
   verticalPadding = 16,
   gap = 4,
+  textOptions,
   renderBubble,
   className,
   style,
@@ -51,6 +55,7 @@ export function ChatBubbles({
     maxBubbleWidth,
     minBubbleWidth,
     horizontalPadding,
+    textOptions,
   });
 
   return (
@@ -89,14 +94,7 @@ export function ChatBubbles({
                 boxSizing: "border-box",
               }}
             >
-              <div
-                style={{
-                  font,
-                  lineHeight: `${lineHeight}px`,
-                  whiteSpace: "pre-wrap",
-                  wordWrap: "break-word",
-                }}
-              >
+              <div style={textStyle(font, lineHeight, textOptions)}>
                 {bubble.message.text}
               </div>
               {bubble.message.timestamp && (

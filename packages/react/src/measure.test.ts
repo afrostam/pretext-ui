@@ -1,5 +1,12 @@
 import { describe, it, expect } from "vitest";
-import { measureText, measureHeight, measureLines } from "./pretext-helpers.js";
+import {
+  measureText,
+  measureHeight,
+  measureLines,
+  measureLineStats,
+  prepareCached,
+  textStyle,
+} from "./pretext-helpers.js";
 
 const FONT = "16px sans-serif";
 const LINE_HEIGHT = 24;
@@ -61,5 +68,68 @@ describe("measureLines", () => {
     for (const line of result.lines) {
       expect(line.width).toBeGreaterThan(0);
     }
+  });
+});
+
+describe("whitespace handling", () => {
+  it("preserves newlines by default (pre-wrap), matching how components render", () => {
+    const result = measureText("line1\nline2\nline3", FONT, 500, LINE_HEIGHT);
+    expect(result.lineCount).toBe(3);
+    expect(result.height).toBe(LINE_HEIGHT * 3);
+  });
+
+  it("preserves blank lines", () => {
+    expect(measureText("a\n\nb", FONT, 500, LINE_HEIGHT).lineCount).toBe(3);
+  });
+
+  it("collapses newlines when whiteSpace is 'normal'", () => {
+    const result = measureText("line1\nline2\nline3", FONT, 500, LINE_HEIGHT, { whiteSpace: "normal" });
+    expect(result.lineCount).toBe(1);
+  });
+
+  it("caches per options, not just text + font", () => {
+    const preWrap = prepareCached("a\nb", FONT);
+    const normal = prepareCached("a\nb", FONT, { whiteSpace: "normal" });
+    expect(preWrap).not.toBe(normal);
+    expect(prepareCached("a\nb", FONT, { whiteSpace: "pre-wrap" })).toBe(preWrap);
+  });
+
+  it("treats an explicit undefined whiteSpace as the pre-wrap default", () => {
+    expect(measureText("a\nb", FONT, 500, LINE_HEIGHT, { whiteSpace: undefined }).lineCount).toBe(2);
+  });
+
+  it("counts the caret line after a trailing newline when a space is appended", () => {
+    // AutoResizeInput relies on this to match textarea behaviour.
+    expect(measureText("abc\n", FONT, 500, LINE_HEIGHT).lineCount).toBe(1);
+    expect(measureText("abc\n ", FONT, 500, LINE_HEIGHT).lineCount).toBe(2);
+  });
+});
+
+describe("measureLineStats", () => {
+  it("returns line count and the widest line", () => {
+    const stats = measureLineStats("Hi\nLonger second line", FONT, 500);
+    const lines = measureLines("Hi\nLonger second line", FONT, 500, LINE_HEIGHT).lines;
+    expect(stats.lineCount).toBe(2);
+    expect(stats.maxLineWidth).toBeCloseTo(Math.max(...lines.map((l) => l.width)));
+  });
+
+  it("never reports a line wider than maxWidth for wrapping text", () => {
+    const stats = measureLineStats("word ".repeat(40), FONT, 150);
+    expect(stats.lineCount).toBeGreaterThan(1);
+    expect(stats.maxLineWidth).toBeLessThanOrEqual(150);
+  });
+});
+
+describe("textStyle", () => {
+  it("renders with the same whitespace mode pretext measured with", () => {
+    expect(textStyle(FONT, LINE_HEIGHT).whiteSpace).toBe("pre-wrap");
+    expect(textStyle(FONT, LINE_HEIGHT, { whiteSpace: "normal" }).whiteSpace).toBe("normal");
+  });
+
+  it("maps letterSpacing and wordBreak to CSS", () => {
+    const style = textStyle(FONT, LINE_HEIGHT, { letterSpacing: 1.5, wordBreak: "keep-all" });
+    expect(style.letterSpacing).toBe("1.5px");
+    expect(style.wordBreak).toBe("keep-all");
+    expect(style.lineHeight).toBe("24px");
   });
 });

@@ -24,7 +24,7 @@
     "react-dom": ">=18"
   },
   "dependencies": {
-    "@chenglou/pretext": "^0.0.3"
+    "@chenglou/pretext": "^0.0.9"
   },
   "devDependencies": {
     "@napi-rs/canvas": "^0.1.97",

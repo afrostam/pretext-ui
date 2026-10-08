@@ -26,7 +26,10 @@ export {
   measureText,
   measureHeight,
   measureLines,
+  measureLineStats,
+  textStyle,
   prepareCached,
   prepareWithSegmentsCached,
   clearPreparedCache,
+  type TextOptions,
 } from "./pretext-helpers.js";

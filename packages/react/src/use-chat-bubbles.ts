@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { measureText, measureLines } from "./pretext-helpers.js";
+import { measureLineStats, type TextOptions } from "./pretext-helpers.js";
 
 export interface ChatMessage {
   key: string;
@@ -30,13 +30,15 @@ export interface UseChatBubblesOptions {
   minBubbleWidth?: number;
   /** Horizontal padding inside the bubble (left + right). Default: 24. */
   horizontalPadding?: number;
+  /** pretext text options (whiteSpace, wordBreak, letterSpacing). */
+  textOptions?: TextOptions;
 }
 
 /**
  * Compute tight-fit bubble layouts using pretext.
  *
- * For each message, lays out at maxWidth then finds the widest line
- * to shrink-wrap the bubble. All pure arithmetic — no DOM.
+ * For each message, measures line stats at maxWidth and shrink-wraps the
+ * bubble to the widest line. All pure arithmetic — no DOM.
  */
 export function useChatBubbles(options: UseChatBubblesOptions): BubbleLayout[] {
   const {
@@ -46,32 +48,28 @@ export function useChatBubbles(options: UseChatBubblesOptions): BubbleLayout[] {
     maxBubbleWidth,
     minBubbleWidth = 48,
     horizontalPadding = 24,
+    textOptions,
   } = options;
+  const { whiteSpace, wordBreak, letterSpacing } = textOptions ?? {};
 
   return useMemo(() => {
     const maxTextWidth = Math.max(maxBubbleWidth - horizontalPadding, 0);
+    const opts: TextOptions = { whiteSpace, wordBreak, letterSpacing };
 
     return messages.map((message): BubbleLayout => {
       if (!message.text) {
         return { message, bubbleWidth: minBubbleWidth, textHeight: lineHeight, lineCount: 1 };
       }
 
-      // Layout with per-line info so we can find the widest line
-      const linesResult = measureLines(message.text, font, maxTextWidth, lineHeight);
-      const widestLine = linesResult.lines.reduce((max, line) => Math.max(max, line.width), 0);
+      const { lineCount, maxLineWidth } = measureLineStats(message.text, font, maxTextWidth, opts);
 
       // Shrink-wrap: bubble is only as wide as its widest line + padding
       const bubbleWidth = Math.max(
         minBubbleWidth,
-        Math.min(Math.ceil(widestLine) + horizontalPadding, maxBubbleWidth)
+        Math.min(Math.ceil(maxLineWidth) + horizontalPadding, maxBubbleWidth)
       );
 
-      return {
-        message,
-        bubbleWidth,
-        textHeight: linesResult.height,
-        lineCount: linesResult.lineCount,
-      };
+      return { message, bubbleWidth, textHeight: lineCount * lineHeight, lineCount };
     });
-  }, [messages, font, lineHeight, maxBubbleWidth, minBubbleWidth, horizontalPadding]);
+  }, [messages, font, lineHeight, maxBubbleWidth, minBubbleWidth, horizontalPadding, whiteSpace, wordBreak, letterSpacing]);
 }

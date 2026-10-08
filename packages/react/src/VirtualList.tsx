@@ -1,5 +1,6 @@
 import React, { type CSSProperties } from "react";
 import { useVirtualList, type VirtualListItem, type VirtualRow } from "./use-virtual-list.js";
+import type { TextOptions } from "./pretext-helpers.js";
 
 export interface VirtualListProps {
   /** All items to render. */
@@ -12,6 +13,8 @@ export interface VirtualListProps {
   rowPadding?: number;
   /** Overscan rows beyond viewport. Default: 5. */
   overscan?: number;
+  /** pretext text options (whiteSpace, wordBreak, letterSpacing). */
+  textOptions?: TextOptions;
   /** Render function for each row. */
   renderRow: (row: VirtualRow) => React.ReactNode;
   /** Optional className for the scroll container. */
@@ -32,6 +35,7 @@ export function VirtualList({
   lineHeight,
   rowPadding,
   overscan,
+  textOptions,
   renderRow,
   className,
   style,
@@ -42,6 +46,7 @@ export function VirtualList({
     lineHeight,
     rowPadding,
     overscan,
+    textOptions,
   });
 
   return (

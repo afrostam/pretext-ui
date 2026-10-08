@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useCallback, useRef, useEffect, type CSSProperties } from "react";
-import { measureHeight } from "./pretext-helpers.js";
+import { measureHeight, type TextOptions } from "./pretext-helpers.js";
 
 export interface MasonryItem {
   key: string;
@@ -37,6 +37,8 @@ export interface MasonryGridProps {
   className?: string;
   /** Optional style for the grid container. */
   style?: CSSProperties;
+  /** pretext text options (whiteSpace, wordBreak, letterSpacing). */
+  textOptions?: TextOptions;
 }
 
 /**
@@ -52,6 +54,7 @@ export function useMasonryLayout(options: {
   cardPadding: number;
   cardHorizontalPadding: number;
   containerWidth: number;
+  textOptions?: TextOptions;
 }): { cards: MasonryCardLayout[]; totalHeight: number } {
   const {
     items,
@@ -62,7 +65,9 @@ export function useMasonryLayout(options: {
     cardPadding,
     cardHorizontalPadding,
     containerWidth,
+    textOptions,
   } = options;
+  const { whiteSpace, wordBreak, letterSpacing } = textOptions ?? {};
 
   return useMemo(() => {
     if (containerWidth <= 0 || columns <= 0) {
@@ -71,6 +76,7 @@ export function useMasonryLayout(options: {
 
     const cardWidth = (containerWidth - gap * (columns - 1)) / columns;
     const textWidth = Math.max(cardWidth - cardHorizontalPadding, 0);
+    const opts: TextOptions = { whiteSpace, wordBreak, letterSpacing };
 
     // Track the bottom edge of each column
     const columnHeights = new Array<number>(columns).fill(0);
@@ -87,7 +93,7 @@ export function useMasonryLayout(options: {
 
       const itemFont = item.font || font;
       const textH = item.text
-        ? measureHeight(item.text, itemFont, textWidth, lineHeight)
+        ? measureHeight(item.text, itemFont, textWidth, lineHeight, opts)
         : lineHeight;
       const cardHeight = textH + cardPadding;
 
@@ -108,7 +114,7 @@ export function useMasonryLayout(options: {
 
     const totalHeight = Math.max(...columnHeights) - gap;
     return { cards, totalHeight: Math.max(totalHeight, 0) };
-  }, [items, font, lineHeight, columns, gap, cardPadding, cardHorizontalPadding, containerWidth]);
+  }, [items, font, lineHeight, columns, gap, cardPadding, cardHorizontalPadding, containerWidth, whiteSpace, wordBreak, letterSpacing]);
 }
 
 /**
@@ -125,6 +131,7 @@ export function MasonryGrid({
   gap = 16,
   cardPadding = 24,
   cardHorizontalPadding = 24,
+  textOptions,
   renderCard,
   className,
   style,
@@ -154,6 +161,7 @@ export function MasonryGrid({
     cardPadding,
     cardHorizontalPadding,
     containerWidth,
+    textOptions,
   });
 
   return (

@@ -211,15 +211,40 @@ Lower-level functions for custom use cases:
 
 ```tsx
 import {
-  measureText,    // returns { lineCount, height }
-  measureHeight,  // returns just the height number
-  measureLines,   // returns per-line { text, width, start, end }
-  prepareCached,  // cached prepare() call
+  measureText,      // returns { lineCount, height }
+  measureHeight,    // returns just the height number
+  measureLineStats, // returns { lineCount, maxLineWidth } — for shrink-wrapping
+  measureLines,     // returns per-line { text, width, start, end }
+  textStyle,        // CSS that renders text the way it was measured
+  prepareCached,    // cached prepare() call
   clearPreparedCache,
 } from "@pretext-ui/react";
 
 // Measure how tall "Hello world" will be at 300px wide
 const height = measureHeight("Hello world", "16px sans-serif", 300, 24);
+```
+
+Every helper takes an optional last argument of `TextOptions`.
+
+## Text Options
+
+Every component accepts a `textOptions` prop, forwarded to pretext:
+
+| Option | Values | Default | Description |
+|---|---|---|---|
+| `whiteSpace` | `"pre-wrap"` \| `"normal"` | `"pre-wrap"` | Whether newlines and repeated spaces are preserved |
+| `wordBreak` | `"normal"` \| `"keep-all"` | `"normal"` | `keep-all` keeps CJK/Hangul words unbroken |
+| `letterSpacing` | `number` (px) | `0` | Extra space between characters |
+
+Components render with the matching CSS automatically. In custom render functions (`renderRow`, `renderCard`), spread `textStyle(font, lineHeight, textOptions)` onto the text element so what's painted matches what was measured:
+
+```tsx
+<VirtualList
+  items={items}
+  font={FONT}
+  lineHeight={24}
+  renderRow={(row) => <div style={textStyle(FONT, 24)}>{row.item.text}</div>}
+/>
 ```
 
 ## Important: Font Matching

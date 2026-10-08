@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from "react";
-import { measureHeight } from "./pretext-helpers.js";
+import { measureHeight, type TextOptions } from "./pretext-helpers.js";
 
 export interface VirtualListItem {
   /** Unique key for the item. */
@@ -19,6 +19,8 @@ export interface UseVirtualListOptions {
   rowPadding?: number;
   /** How many rows to render beyond the visible area (above + below). */
   overscan?: number;
+  /** pretext text options (whiteSpace, wordBreak, letterSpacing). */
+  textOptions?: TextOptions;
 }
 
 export interface VirtualRow {
@@ -46,7 +48,8 @@ export interface UseVirtualListResult {
  * Uses pretext to compute exact row heights with pure arithmetic — no DOM measurement needed.
  */
 export function useVirtualList(options: UseVirtualListOptions): UseVirtualListResult {
-  const { items, font, lineHeight, rowPadding = 16, overscan = 5 } = options;
+  const { items, font, lineHeight, rowPadding = 16, overscan = 5, textOptions } = options;
+  const { whiteSpace, wordBreak, letterSpacing } = textOptions ?? {};
 
   const [scrollTop, setScrollTop] = useState(0);
   const [containerHeight, setContainerHeight] = useState(0);
@@ -87,12 +90,13 @@ export function useVirtualList(options: UseVirtualListOptions): UseVirtualListRe
     }
     // Account for padding inside the row when measuring text width
     const textWidth = Math.max(containerWidth - 32, 0); // 16px padding each side
+    const opts: TextOptions = { whiteSpace, wordBreak, letterSpacing };
     const heights: number[] = new Array(items.length);
     const prefixes: number[] = new Array(items.length);
     let cumulative = 0;
 
     for (let i = 0; i < items.length; i++) {
-      const textHeight = measureHeight(items[i].text, font, textWidth, lineHeight);
+      const textHeight = measureHeight(items[i].text, font, textWidth, lineHeight, opts);
       const rowH = textHeight + rowPadding;
       heights[i] = rowH;
       prefixes[i] = cumulative;
@@ -100,7 +104,7 @@ export function useVirtualList(options: UseVirtualListOptions): UseVirtualListRe
     }
 
     return { rowHeights: heights, prefixHeights: prefixes, totalHeight: cumulative };
-  }, [items, font, lineHeight, rowPadding, containerWidth]);
+  }, [items, font, lineHeight, rowPadding, containerWidth, whiteSpace, wordBreak, letterSpacing]);
 
   // Binary search for first visible row
   const visibleRows = useMemo((): VirtualRow[] => {
