@@ -107,12 +107,12 @@ function VirtualListDemo() {
 
   const renderRow = useCallback((row: VirtualRow) => (
     <div className="flex gap-2 px-3 py-1.5 border-b border-white/5">
-      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center text-[10px] text-accent-light mt-0.5">
+      <div className="shrink-0 w-6 h-6 rounded-full bg-accent/20 flex items-center justify-center text-[10px] text-accent-light mt-0.5">
         {(row.index % 4) + 1}
       </div>
       <div className="min-w-0 flex-1">
         <div className="text-[10px] text-gray-600 mb-0.5">#{row.index}</div>
-        <div className="text-gray-300 whitespace-pre-wrap break-words" style={{ font: FONT, lineHeight: `${LINE_HEIGHT}px` }}>
+        <div className="text-gray-300 whitespace-pre-wrap wrap-break-word" style={{ font: FONT, lineHeight: `${LINE_HEIGHT}px` }}>
           {row.item.text}
         </div>
       </div>
@@ -167,7 +167,7 @@ function AutoResizeInputDemo() {
         maxLines={8}
         verticalPadding={16}
         placeholder="Start typing here... try pasting a paragraph. The textarea resizes instantly using pretext math — no hidden mirror element."
-        className="w-full rounded-lg border border-white/10 bg-[#0a0a0e] px-3 py-2 text-gray-300 placeholder:text-gray-700 focus:outline-none focus:border-accent/40 transition-colors"
+        className="w-full rounded-lg border border-white/10 bg-[#0a0a0e] px-3 py-2 text-gray-300 placeholder:text-gray-700 focus:outline-hidden focus:border-accent/40 transition-colors"
       />
     </div>
   );
@@ -221,7 +221,7 @@ function StreamingTextDemo() {
           textClassName="text-gray-300"
         />
       </div>
-      <div className="mt-2 rounded-md bg-white/[0.02] border border-white/5 p-2 text-center text-[10px] text-gray-600">
+      <div className="mt-2 rounded-md bg-white/2 border border-white/5 p-2 text-center text-[10px] text-gray-600">
         This box never moves. The container above is pre-sized on every token.
       </div>
     </div>

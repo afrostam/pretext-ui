@@ -38,7 +38,7 @@ export function MessageList({ messages }: MessageListProps) {
           <div className="max-w-3xl mx-auto flex gap-4">
             {/* Avatar */}
             <div
-              className={`flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-semibold mt-0.5 ${
+              className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-semibold mt-0.5 ${
                 isUser
                   ? "bg-accent/20 text-accent-light"
                   : "bg-emerald-900/30 text-emerald-400"
@@ -53,7 +53,7 @@ export function MessageList({ messages }: MessageListProps) {
                 {isUser ? "You" : "Assistant"}
               </div>
               <div
-                className="text-gray-200 whitespace-pre-wrap break-words"
+                className="text-gray-200 whitespace-pre-wrap wrap-break-word"
                 style={{ font: FONT, lineHeight: `${LINE_HEIGHT}px` }}
               >
                 {msg.text}

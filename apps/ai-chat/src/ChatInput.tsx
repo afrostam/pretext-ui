@@ -43,13 +43,13 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
             onKeyDown={handleKeyDown}
             placeholder={disabled ? "Waiting for response..." : "Send a message... (Shift+Enter for new line)"}
             disabled={disabled}
-            className="flex-1 bg-transparent text-gray-200 placeholder:text-gray-600 focus:outline-none disabled:opacity-50 resize-none"
+            className="flex-1 bg-transparent text-gray-200 placeholder:text-gray-600 focus:outline-hidden disabled:opacity-50 resize-none"
           />
 
           <button
             onClick={handleSubmit}
             disabled={!value.trim() || disabled}
-            className="flex-shrink-0 w-8 h-8 rounded-lg bg-accent hover:bg-accent/80 disabled:opacity-30 disabled:hover:bg-accent flex items-center justify-center transition-colors mb-0.5"
+            className="shrink-0 w-8 h-8 rounded-lg bg-accent hover:bg-accent/80 disabled:opacity-30 disabled:hover:bg-accent flex items-center justify-center transition-colors mb-0.5"
           >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path

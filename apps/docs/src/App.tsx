@@ -40,7 +40,7 @@ export function App() {
 
   const renderRow = useCallback((row: VirtualRow) => (
     <div className="flex gap-3 px-4 py-2 border-b border-gray-800/50">
-      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-indigo-600/30 flex items-center justify-center text-xs font-medium text-indigo-300 mt-0.5">
+      <div className="shrink-0 w-8 h-8 rounded-full bg-indigo-600/30 flex items-center justify-center text-xs font-medium text-indigo-300 mt-0.5">
         {(row.index % 5) + 1}
       </div>
       <div className="min-w-0 flex-1">
@@ -49,7 +49,7 @@ export function App() {
           <span className="ml-2 text-gray-700">#{row.index}</span>
         </div>
         <div
-          className="text-gray-200 whitespace-pre-wrap break-words"
+          className="text-gray-200 whitespace-pre-wrap wrap-break-word"
           style={{ font: FONT, lineHeight: `${LINE_HEIGHT}px` }}
         >
           {row.item.text}

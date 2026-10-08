@@ -38,7 +38,7 @@ export function AutoResizeInputDemo() {
           onChange={(e) => setValue(e.target.value)}
           onHeightChange={setHeight}
           placeholder="Start typing… the textarea grows as you type. No scrollHeight hacks, no hidden mirror elements — just pretext math."
-          className="w-full rounded-xl border border-gray-700 bg-gray-900 px-4 py-2 text-gray-200 placeholder:text-gray-600 focus:outline-none focus:border-indigo-500 transition-colors"
+          className="w-full rounded-xl border border-gray-700 bg-gray-900 px-4 py-2 text-gray-200 placeholder:text-gray-600 focus:outline-hidden focus:border-indigo-500 transition-colors"
         />
 
         <div className="mt-2 flex gap-4 text-xs text-gray-600">
@@ -59,7 +59,7 @@ export function AutoResizeInputDemo() {
             maxLines={6}
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-gray-200 text-sm focus:outline-none focus:border-indigo-500"
+            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-gray-200 text-sm focus:outline-hidden focus:border-indigo-500"
           />
         </div>
         <div>
@@ -70,7 +70,7 @@ export function AutoResizeInputDemo() {
             minLines={2}
             maxLines={6}
             defaultValue="Edit me independently!"
-            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-gray-200 text-sm focus:outline-none focus:border-indigo-500"
+            className="w-full rounded-lg border border-gray-700 bg-gray-900 px-3 py-2 text-gray-200 text-sm focus:outline-hidden focus:border-indigo-500"
           />
         </div>
       </div>
